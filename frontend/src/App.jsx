@@ -228,6 +228,28 @@ function App() {
                         className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
                       />
                     </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <label className="text-sm font-semibold text-slate-700">Screen Time Before Bed (Hours)</label>
+                        <span className="text-blue-600 font-bold">{formData.screenTimeBed} Hours</span>
+                      </div>
+                      <input
+                        type="range" min="0" max="12" step="0.5" name="screenTimeBed" value={formData.screenTimeBed} onChange={handleInputChange}
+                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <label className="text-sm font-semibold text-slate-700">Social Interactions Level</label>
+                        <span className="text-blue-600 font-bold">{formData.social}/10</span>
+                      </div>
+                      <input
+                        type="range" min="1" max="10" name="social" value={formData.social} onChange={handleInputChange}
+                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                      />
+                    </div>
                   </div>
 
                   <button type="submit" disabled={loading} className={`w-full btn-official py-4 text-lg ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
