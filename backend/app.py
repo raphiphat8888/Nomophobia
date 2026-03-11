@@ -32,9 +32,9 @@ def train_model():
         y = DATA['Addiction_Level']
         MODEL = RandomForestRegressor(n_estimators=100, random_state=42)
         MODEL.fit(X, y)
-        print("✅ Model trained successfully on startup")
+        print("Model trained successfully on startup")
     except Exception as e:
-        print(f"❌ Error training model: {e}")
+        print(f"Error training model: {e}")
 
 @app.on_event("startup")
 async def startup_event():
