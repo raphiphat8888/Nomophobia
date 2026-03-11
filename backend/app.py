@@ -64,6 +64,24 @@ def get_stats():
         "avg_addiction": round(DATA['Addiction_Level'].mean(), 1)
     }
 
+@app.get("/chart-data")
+def get_chart_data():
+    if DATA is None:
+        return {"error": "Data not loaded"}
+    
+    # Group by rounded Daily Usage
+    usage_data = DATA.groupby(DATA['Daily_Usage_Hours'].apply(lambda x: round(x * 2) / 2))['Addiction_Level'].mean().reset_index()
+    usage_chart = [{"usage": float(row['Daily_Usage_Hours']), "addiction": round(float(row['Addiction_Level']), 1)} for _, row in usage_data.iterrows()]
+    
+    # Group by Anxiety Level
+    anxiety_data = DATA.groupby(DATA['Anxiety_Level'].round())['Addiction_Level'].mean().reset_index()
+    anxiety_chart = [{"anxiety": int(row['Anxiety_Level']), "addiction": round(float(row['Addiction_Level']), 1)} for _, row in anxiety_data.iterrows()]
+    
+    return {
+        "usage_chart": usage_chart,
+        "anxiety_chart": anxiety_chart
+    }
+
 @app.post("/predict")
 def predict(input_data: NomophobiaInput):
     if MODEL is None:

@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  LineChart, Line
+} from 'recharts'
 
 const API_BASE_URL = 'http://localhost:8000'
 
@@ -21,6 +25,11 @@ function App() {
     social: 5
   })
   const [prediction, setPrediction] = useState(null)
+  
+  const [chartData, setChartData] = useState({
+    usage_chart: [],
+    anxiety_chart: []
+  })
 
   // Fetch stats from backend on mount
   useEffect(() => {
@@ -28,6 +37,11 @@ function App() {
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(err => console.error("Error fetching stats:", err))
+
+    fetch(`${API_BASE_URL}/chart-data`)
+      .then(res => res.json())
+      .then(data => setChartData(data))
+      .catch(err => console.error("Error fetching chart data:", err))
   }, [])
 
   const handleInputChange = (e) => {
@@ -114,24 +128,52 @@ function App() {
               ))}
             </div>
 
-            {/* Charts Placeholder */}
+            {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="card-official p-8">
-                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center">
+              <div className="card-official p-8 flex flex-col">
+                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center shrink-0">
                   <span className="w-2 h-6 bg-blue-600 rounded-full mr-3"></span>
                   Usage Duration vs. Addiction Level
                 </h3>
-                <div className="h-64 bg-slate-50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm">
-                  [ Interactive Data Visualization - Connected to Live API ]
+                <div className="h-64 bg-white rounded-lg flex items-center justify-center p-2 grow relative">
+                  {chartData.usage_chart && chartData.usage_chart.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={chartData.usage_chart}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="usage" stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${val}h`} />
+                        <YAxis stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} domain={[0, 10]} />
+                        <Tooltip cursor={{fill: '#F1F5F9'}} contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
+                        <Bar dataKey="addiction" fill="#2563EB" radius={[4, 4, 0, 0]} barSize={32} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="text-slate-400 text-sm h-full w-full flex items-center justify-center border border-dashed border-slate-300 rounded-lg">
+                      Loading Chart Data...
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="card-official p-8">
-                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center">
+              <div className="card-official p-8 flex flex-col">
+                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center shrink-0">
                   <span className="w-2 h-6 bg-indigo-600 rounded-full mr-3"></span>
                   Anxiety Factor Correlation
                 </h3>
-                <div className="h-64 bg-slate-50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-sm">
-                  [ Live Statistical Analysis View ]
+                <div className="h-64 bg-white rounded-lg flex items-center justify-center p-2 grow relative">
+                  {chartData.anxiety_chart && chartData.anxiety_chart.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={chartData.anxiety_chart}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                        <XAxis dataKey="anxiety" stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} />
+                        <YAxis stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} domain={[0, 10]} />
+                        <Tooltip contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
+                        <Line type="monotone" dataKey="addiction" stroke="#4F46E5" strokeWidth={3} dot={{r: 4, strokeWidth: 2}} activeDot={{r: 6}} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="text-slate-400 text-sm h-full w-full flex items-center justify-center border border-dashed border-slate-300 rounded-lg">
+                      Loading Chart Data...
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
