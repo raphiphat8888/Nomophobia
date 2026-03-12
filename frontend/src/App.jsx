@@ -6,6 +6,12 @@ import {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
+// Header สำหรับ bypass ngrok browser warning
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'ngrok-skip-browser-warning': 'true'
+}
+
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [loading, setLoading] = useState(false)
@@ -33,12 +39,12 @@ function App() {
 
   // Fetch stats from backend on mount
   useEffect(() => {
-    fetch(`${API_BASE_URL}/stats`)
+    fetch(`${API_BASE_URL}/stats`, { headers: HEADERS })
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(err => console.error("Error fetching stats:", err))
 
-    fetch(`${API_BASE_URL}/chart-data`)
+    fetch(`${API_BASE_URL}/chart-data`, { headers: HEADERS })
       .then(res => res.json())
       .then(data => setChartData(data))
       .catch(err => console.error("Error fetching chart data:", err))
@@ -55,7 +61,7 @@ function App() {
     try {
       const response = await fetch(`${API_BASE_URL}/predict`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: HEADERS,
         body: JSON.stringify(formData)
       })
       const data = await response.json()
