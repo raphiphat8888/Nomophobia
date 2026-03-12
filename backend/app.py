@@ -72,8 +72,8 @@ app = FastAPI(title="Nomophobia Analysis System", lifespan=lifespan)
 # Enable CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, specify your React URL
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
