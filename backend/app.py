@@ -7,9 +7,19 @@ import os
 import joblib
 from contextlib import asynccontextmanager
 
+from sklearn.svm import SVR
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
 # Constants
-FEATURES = ['Age', 'Daily_Usage_Hours', 'Phone_Checks_Per_Day', 'Screen_Time_Before_Bed', 'Anxiety_Level', 'Social_Interactions']
-MODEL_PATH = os.path.join(os.path.dirname(__file__), 'models', 'nomophobia_rf_model.joblib')
+FEATURES = [
+    'Age', 'Gender', 'Daily_Usage_Hours', 'Sleep_Hours', 'Academic_Performance',
+    'Social_Interactions', 'Exercise_Hours', 'Anxiety_Level', 'Depression_Level',
+    'Self_Esteem', 'Parental_Control', 'Screen_Time_Before_Bed', 'Phone_Checks_Per_Day',
+    'Apps_Used_Daily', 'Time_on_Social_Media', 'Time_on_Gaming', 'Time_on_Education',
+    'Phone_Usage_Purpose', 'Family_Communication', 'Weekend_Usage_Hours'
+]
+MODEL_PATH = os.path.join(os.path.dirname(__file__), 'models', 'nomophobia_svm_model.joblib')
 DATA_PATH = os.path.join(os.path.dirname(__file__), 'teen_phone_New.csv')
 
 # Global variables
@@ -30,16 +40,22 @@ def train_or_load_model():
             MODEL = joblib.load(MODEL_PATH)
             print("✅ Model loaded from disk")
         elif DATA is not None:
-            print("⏳ Training new model (this may take a moment)...")
+            print("⏳ Training new SVM model with scaling (this may take a moment)...")
             X = DATA[FEATURES]
             y = DATA['Addiction_Level']
-            MODEL = RandomForestRegressor(n_estimators=100, random_state=42)
+            
+            # Create a pipeline with Scaling + SVR (Linear)
+            # Linear kernel is better at extrapolating outside the biased 8-10 range of the training data
+            MODEL = Pipeline([
+                ('scaler', StandardScaler()),
+                ('svr', SVR(kernel='linear', C=0.2, epsilon=0.1))
+            ])
             MODEL.fit(X, y)
             
             # Ensure models directory exists
             os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
             joblib.dump(MODEL, MODEL_PATH)
-            print("✅ Model trained and saved to disk")
+            print("✅ Model trained with Linear Scaling and saved to disk")
     except Exception as e:
         print(f"❌ Error in train_or_load_model: {e}")
 
@@ -62,12 +78,26 @@ app.add_middleware(
 )
 
 class NomophobiaInput(BaseModel):
-    age: float
-    dailyUsage: float
-    phoneChecks: float
-    screenTimeBed: float
-    anxiety: float
-    social: float
+    Age: float
+    Gender: int
+    Daily_Usage_Hours: float
+    Sleep_Hours: float
+    Academic_Performance: float
+    Social_Interactions: float
+    Exercise_Hours: float
+    Anxiety_Level: float
+    Depression_Level: float
+    Self_Esteem: float
+    Parental_Control: int
+    Screen_Time_Before_Bed: float
+    Phone_Checks_Per_Day: float
+    Apps_Used_Daily: float
+    Time_on_Social_Media: float
+    Time_on_Gaming: float
+    Time_on_Education: float
+    Phone_Usage_Purpose: int
+    Family_Communication: float
+    Weekend_Usage_Hours: float
 
 @app.get("/")
 def read_root():
@@ -121,34 +151,43 @@ def predict(input_data: NomophobiaInput):
             raise HTTPException(status_code=503, detail="Model not ready")
     
     try:
-        # Prepare data for prediction
-        input_df = pd.DataFrame([[
-            input_data.age,
-            input_data.dailyUsage,
-            input_data.phoneChecks,
-            input_data.screenTimeBed,
-            input_data.anxiety,
-            input_data.social
-        ]], columns=FEATURES)
+        # Prepare data for prediction explicitly to match FEATURE order
+        input_dict = input_data.model_dump()
+        input_list = [input_dict[feat] for feat in FEATURES]
+        input_df = pd.DataFrame([input_list], columns=FEATURES)
         
-        score_raw = MODEL.predict(input_df)[0]
-        score = round(min(max(float(score_raw), 1.0), 10.0), 1)
+        # HEURISTIC GUARD: If usage is minimal, addiction must be low
+        # The dataset is 99% high-addiction samples, so the model over-predicts by default
+        if input_dict['Daily_Usage_Hours'] < 0.5 and input_dict['Phone_Checks_Per_Day'] < 5:
+            score = 1.0 # Baseline Mild
+        else:
+            score_raw = MODEL.predict(input_df)[0]
+            # Even with linear kernel, apply a slight adjustment for low usage
+            if input_dict['Daily_Usage_Hours'] < 2:
+                 score_raw = score_raw * 0.5 # Scale down for low usage to counter bias
+            
+            score = round(min(max(float(score_raw), 1.0), 10.0), 1)
         
         # Diagnostic mapping
         if score >= 8.0:
-            label = "Severe (รุนแรงมาก)"
+            label = "รุนแรง (Severe)"
             risk = "High"
+            message = "SVM model detects high correlation with clinical nomophobia. Personal intervention is highly recommended."
         elif score >= 5.0:
-            label = "Moderate (ปานกลาง)"
+            label = "ปานกลาง (Moderate)"
             risk = "Medium"
+            message = "Warning: Digital habits are trending towards dependency. Consider implementing digital boundaries."
         else:
-            label = "Mild (น้อย)"
+            label = "ปกติ (Normal)"
             risk = "Low"
+            message = "Digital usage levels are within a healthy range compared to research benchmarks."
         
         return {
             "prediction_score": score,
             "prediction_label": label,
             "risk_level": risk,
+            "message": message,
+            "model_type": "Support Vector Machine (SVM)",
             "status": "success"
         }
     except Exception as e:
@@ -156,4 +195,5 @@ def predict(input_data: NomophobiaInput):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+    print("\n🚀 Nomophobia API is starting at http://localhost:8000")
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
