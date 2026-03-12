@@ -1,9 +1,9 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useLanguage } from '../context/LanguageContext'
-import { Award, Brain, Instagram } from 'lucide-react'
+import { Award, Brain, Mail, Instagram } from 'lucide-react'
 
-const ExpertCard = ({ name, role, title, image, bio_en, bio_th, delay, lang, linkedin, mail, instagram }) => (
+const ExpertCard = ({ name, role, title, image, bio_en, bio_th, delay, lang, instagram }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     animate={{ opacity: 1, y: 0 }}
