@@ -41,7 +41,7 @@ const Community = () => {
 
   const experts = [
     {
-      name: lang === 'en' ? "Dr. Thanapol Khampim" : "นพ. ธนพล คำพิมพ์",
+      name: lang === 'en' ? "Dr. Thanapol Khampimpit" : "นพ. ธนพล คำพิมพ์ปิด",
       title: "Nomophobia Specialist",
       role: lang === 'en' ? "Psychiatrist / Digital Health Expert" : "จิตแพทย์ / ผู้เชี่ยวชาญด้านสุขภาพดิจิทัล",
       image: "/experts/expert1.png",
@@ -84,6 +84,14 @@ const Community = () => {
       bio_en: "Provides essential clinical support and assists in coordinating research activities. Focuses on data quality assurance and patient-centric communication within the Nomophobia study.",
       bio_th: "ผู้ให้การสนับสนุนด้านคลินิกและช่วยประสานงานกิจกรรมการวิจัย มุ่งเน้นการตรวจสอบคุณภาพข้อมูลและการสื่อสารที่ยึดผู้ป่วยเป็นศูนย์กลางในการศึกษาภาวะโนโมโฟเบีย",
       instagram: "https://www.instagram.com/jb.first"
+    },
+    {
+      name: lang === 'en' ? "Dr. Pasu Poeyrutai" : "ดร. พสุ เผยฤทัย",
+      title: "Senior Strategic Advisor",
+      role: lang === 'en' ? "Policy & Strategy Consultant" : "ที่ปรึกษาอาวุโสด้านกลยุทธ์และนโยบาย",
+      image: "/experts/expert6.png",
+      bio_en: "A visionary strategist providing high-level guidance for research direction and digital wellbeing policies. Oversees the long-term impact of the Nomophobia assessment framework on public health.",
+      bio_th: "นักยุทธศาสตร์ผู้มีวิสัยทัศน์คอยให้คำแนะนำระดับสูงเกี่ยวกับทิศทางการวิจัยและนโยบายสุขภาวะทางดิจิทัล ดูแลผลกระทบในระยะยาวของกรอบการประเมินภาวะโนโมโฟเบียต่อสุขภาพสาธารณะ"
     }
   ]
 
