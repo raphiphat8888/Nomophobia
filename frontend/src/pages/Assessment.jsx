@@ -5,7 +5,7 @@ import {
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const API_BASE_URL = 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 const QuestionCard = ({ icon: Icon, label, description, iconColor, bgColor, children }) => (
   <div className="space-y-6 bg-white/50 p-8 rounded-[2rem] border border-slate-100 shadow-sm transition-all hover:shadow-md h-full">
