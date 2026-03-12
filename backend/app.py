@@ -11,7 +11,7 @@ app = FastAPI(title="Nomophobia Analysis System", description="Nomophobia analys
 # Enable CORS (Cross-Origin Resource Sharing)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, specify your React URL
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
