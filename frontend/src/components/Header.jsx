@@ -51,17 +51,17 @@ const Header = () => {
   }
 
   return (
-    <header className="h-20 flex items-center justify-between px-8 bg-white/50 backdrop-blur-sm border-b border-slate-100 shrink-0 relative z-50">
+    <header className="h-20 flex items-center justify-between px-4 md:px-8 bg-white/50 backdrop-blur-sm border-b border-slate-100 shrink-0 relative z-50">
       <div className="relative" ref={dropdownRef}>
-        <div className="flex items-center bg-slate-100 rounded-2xl px-4 py-2 w-96 border border-slate-200/50 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
+        <div className="flex items-center bg-slate-100 rounded-2xl px-3 py-2 w-full max-w-[160px] sm:max-w-96 border border-slate-200/50 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
           <Search size={18} className="text-slate-400 mr-2" />
           <input 
             type="text" 
             value={query}
             onChange={handleSearch}
             onFocus={() => query && setIsOpen(true)}
-            placeholder={lang === 'en' ? "Search experts, menus, metrics..." : "ค้นหาผู้เชี่ยวชาญ, เมนู, ข้อมูลวิจัย..."} 
-            className="bg-transparent border-none outline-none text-sm font-medium w-full" 
+            placeholder={lang === 'en' ? "Search..." : "ค้นหา..."} 
+            className="bg-transparent border-none outline-none text-xs sm:text-sm font-medium w-full" 
           />
         </div>
 
