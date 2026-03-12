@@ -134,10 +134,13 @@ const Community = () => {
               ? 'We are open to academic and medical partnerships globally.'
               : 'เราเปิดรับความร่วมมือทางวิชาการและการแพทย์จากทุกหน่วยงานทั่วประเทศ'}
           </p>
-          <button className="btn-premium bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold inline-flex items-center space-x-3 hover:scale-105 transition-transform">
+          <a
+            href="mailto:raphiphat.s@ku.th"
+            className="btn-premium bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold inline-flex items-center space-x-3 hover:scale-105 transition-transform"
+          >
             <Mail size={20} />
             <span>{lang === 'en' ? 'Contact Our Research Team' : 'ติดต่อทีมวิจัยของเรา'}</span>
-          </button>
+          </a>
         </div>
       </div>
     </div>
