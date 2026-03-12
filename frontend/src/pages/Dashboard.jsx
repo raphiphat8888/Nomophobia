@@ -13,11 +13,7 @@ import {
 import { motion } from 'framer-motion'
 import { useLanguage } from '../context/LanguageContext'
 
-<<<<<<< HEAD
-const API_BASE_URL = 'http://localhost:8000/dashboard'
-=======
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
->>>>>>> 27f57fe3ea27a475f65c819dbaa1028d6a55ea7f
 
 const StatCard = ({ label, value, sub, icon: Icon, colorClass, bgColorClass }) => (
   <motion.div 
