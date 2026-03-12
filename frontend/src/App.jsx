@@ -59,7 +59,7 @@ function App() {
         body: JSON.stringify(formData)
       })
       const data = await response.json()
-      setPrediction(data.prediction_score)
+      setPrediction(data)
     } catch (err) {
       console.error("Prediction error:", err)
       alert("Error connecting to backend API")
@@ -259,26 +259,29 @@ function App() {
 
                 {prediction && (
                   <div className="mt-10 p-8 rounded-xl bg-slate-50 border border-slate-200 animate-in zoom-in duration-300">
-                    <h3 className="text-xl font-bold text-slate-800 mb-4 border-b pb-4 border-slate-200">Analysis Results (Live Prediction)</h3>
+                    <h3 className="text-xl font-bold text-slate-800 mb-4 border-b pb-4 border-slate-200">Analysis Results (Live AI Prediction)</h3>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-slate-600 font-medium">Addiction Severity Score</span>
-                      <span className={`text-3xl font-black ${prediction > 7 ? 'text-rose-600' : prediction > 4 ? 'text-amber-600' : 'text-emerald-600'}`}>
-                        {prediction} / 10
+                      <div>
+                        <span className="text-slate-600 font-medium block">Addiction Severity Score</span>
+                        <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">{prediction.prediction_label}</span>
+                      </div>
+                      <span className={`text-3xl font-black ${prediction.prediction_score > 7 ? 'text-rose-600' : prediction.prediction_score > 4 ? 'text-amber-600' : 'text-emerald-600'}`}>
+                        {prediction.prediction_score} / 10
                       </span>
                     </div>
 
                     <div className="w-full h-4 bg-slate-200 rounded-full overflow-hidden mb-6">
                       <div
-                        className={`h-full transition-all duration-1000 ${prediction > 7 ? 'bg-rose-600' : prediction > 4 ? 'bg-amber-600' : 'bg-emerald-600'}`}
-                        style={{ width: `${prediction * 10}%` }}
+                        className={`h-full transition-all duration-1000 ${prediction.prediction_score > 7 ? 'bg-rose-600' : prediction.prediction_score > 4 ? 'bg-amber-600' : 'bg-emerald-600'}`}
+                        style={{ width: `${prediction.prediction_score * 10}%` }}
                       />
                     </div>
 
-                    <div className={`p-4 rounded-lg flex items-start space-x-3 ${prediction > 7 ? 'bg-rose-50 text-rose-800' : prediction > 4 ? 'bg-amber-50 text-amber-800' : 'bg-emerald-50 text-emerald-800'}`}>
+                    <div className={`p-4 rounded-lg flex items-start space-x-3 ${prediction.prediction_score > 7 ? 'bg-rose-50 text-rose-800' : prediction.prediction_score > 4 ? 'bg-amber-50 text-amber-800' : 'bg-emerald-50 text-emerald-800'}`}>
                       <span className="text-xl">ℹ️</span>
                       <p className="text-sm leading-relaxed">
-                        {prediction > 7 ? 'High Risk detected. Results suggest significant psychological dependency based on our Machine Learning model.' :
-                          prediction > 4 ? 'Moderate Risk identified. Patterns indicate emerging addiction habits. Consider setting screen time limits.' :
+                        Diagnostic Result: <strong>{prediction.prediction_label}</strong>. {prediction.risk_level === 'High' ? 'High Risk detected. Results suggest significant psychological dependency based on our Machine Learning model.' :
+                          prediction.risk_level === 'Medium' ? 'Moderate Risk identified. Patterns indicate emerging addiction habits. Consider setting screen time limits.' :
                             'Low Risk. Smartphone usage patterns are within healthy clinical ranges.'}
                       </p>
                     </div>

@@ -1,18 +1,33 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import numpy as np
 import pandas as pd
+import os
 
 # 1. Initialize FastAPI
 app = FastAPI(title="Nomophobia Prediction API")
 
-# 2. Load the exported Model and Scaler
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 2. Load the exported Model and Scaler from the models folder
 try:
-    scaler = joblib.load('nomophobia_scaler.joblib')
+    current_dir = os.path.dirname(__file__)
+    scaler_path = os.path.join(current_dir, 'models', 'nomophobia_scaler.joblib')
+    model_path = os.path.join(current_dir, 'models', 'nomophobia_neural_network_model.joblib')
+    
+    scaler = joblib.load(scaler_path)
     # Best model from our analysis: Neural Network
-    model = joblib.load('nomophobia_neural_network_model.joblib')
-    print("✅ Model and Scaler loaded successfully")
+    model = joblib.load(model_path)
+    print("✅ Model and Scaler loaded successfully from models/")
 except Exception as e:
     print(f"❌ Error loading model: {e}")
 
