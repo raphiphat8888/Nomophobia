@@ -48,13 +48,19 @@ const Dashboard = () => {
   const [chartData, setChartData] = useState({ usage_chart: [], anxiety_chart: [] })
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/stats`)
-      .then(res => res.json())
+    fetch(`${API_BASE_URL}/dashboard/stats`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Stats server error: ${res.status}`);
+        return res.json();
+      })
       .then(setStats)
       .catch(err => console.error("Stats fetch error:", err));
 
-    fetch(`${API_BASE_URL}/chart-data`)
-      .then(res => res.json())
+    fetch(`${API_BASE_URL}/dashboard/chart-data`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Chart server error: ${res.status}`);
+        return res.json();
+      })
       .then(setChartData)
       .catch(err => console.error("Chart data fetch error:", err));
   }, [])
