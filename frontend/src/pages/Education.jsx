@@ -8,9 +8,11 @@ import {
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useLanguage } from '../context/LanguageContext'
+import { useNavigate } from 'react-router-dom'
 
 const Education = () => {
   const { lang } = useLanguage()
+  const navigate = useNavigate()
   
   const tips = [
     { 
@@ -73,7 +75,10 @@ const Education = () => {
             <p className="text-slate-400 mb-8 font-medium">
               {lang === 'en' ? "If your addiction is impacting your work or mental health severely, consider speaking with a digital wellness therapist." : "หากการเสพติดของคุณส่งผลกระทบต่องานหรือสุขภาพจิตอย่างรุนแรง ลองปรึกษากับนักบำบัดด้านสุขภาวะดิจิทัล"}
             </p>
-            <button className="btn-premium bg-white text-slate-900 flex items-center space-x-2">
+            <button 
+              onClick={() => navigate('/community')}
+              className="btn-premium bg-white text-slate-900 flex items-center space-x-2"
+            >
               <span>{lang === 'en' ? "Find Specialists" : "ค้นหาผู้เชี่ยวชาญ"}</span>
               <ChevronRight size={18} />
             </button>
