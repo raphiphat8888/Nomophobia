@@ -1,14 +1,16 @@
-import React from 'react'
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useLanguage } from '../context/LanguageContext'
+import { useLocation } from 'react-router-dom'
 import { Award, Brain, Mail, Instagram } from 'lucide-react'
 
-const ExpertCard = ({ name, role, title, image, bio_en, bio_th, delay, lang, instagram }) => (
+const ExpertCard = ({ id, name, role, title, image, bio_en, bio_th, delay, lang, instagram }) => (
   <motion.div
+    id={id}
     initial={{ opacity: 0, y: 30 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.5 }}
-    className="glass-card flex flex-col md:flex-row gap-8 p-8 overflow-hidden group border border-slate-100/50 hover:border-blue-500/30 transition-all duration-300 w-full"
+    className="glass-card flex flex-col md:flex-row gap-8 p-8 overflow-hidden group border border-slate-100/50 hover:border-blue-500/30 transition-all duration-300 w-full scroll-mt-24"
     style={{ maxWidth: '800px' }}
   >
     <div className="w-full md:w-48 xl:w-56 shrink-0 aspect-square rounded-[2rem] overflow-hidden relative shadow-lg shadow-blue-500/10">
@@ -38,9 +40,22 @@ const ExpertCard = ({ name, role, title, image, bio_en, bio_th, delay, lang, ins
 
 const Community = () => {
   const { lang } = useLanguage()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const element = document.getElementById(location.state.scrollTo)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+        // Clear state to avoid scrolling again on manual refresh
+        window.history.replaceState({}, document.title)
+      }
+    }
+  }, [location])
 
   const experts = [
     {
+      id: 'expert-thanapol',
       name: lang === 'en' ? "Dr. Thanapol Khampimpit" : "นพ. ธนพล คำพิมพ์ปิด",
       title: "Nomophobia Specialist",
       role: lang === 'en' ? "Psychiatrist / Digital Health Expert" : "จิตแพทย์ / ผู้เชี่ยวชาญด้านสุขภาพดิจิทัล",
@@ -50,6 +65,7 @@ const Community = () => {
       instagram: "https://www.instagram.com/punz_tnp"
     },
     {
+      id: 'expert-narusorn',
       name: lang === 'en' ? "Dr. Narusorn Ruangchot" : "ดร. นฤสรณ์ เรืองโชติ",
       title: "Data Analyst & Collector",
       role: lang === 'en' ? "Data Scientist / Data Analyst" : "นักเก็บรวบรวมและวิเคราะห์ข้อมูล",
@@ -59,6 +75,7 @@ const Community = () => {
       instagram: "https://www.instagram.com/baimon.exe"
     },
     {
+      id: 'expert-raphiphat',
       name: lang === 'en' ? "Dr. Raphiphat Saenkla" : "ดร. รพีภัทร แสนกล้า",
       title: "Graph Analysis Expert",
       role: lang === 'en' ? "Visualization Specialist" : "ผู้เชี่ยวชาญด้านการวิเคราะห์กราฟ",
@@ -68,6 +85,7 @@ const Community = () => {
       instagram: "https://www.instagram.com/t.takt.8888_/"
     },
     {
+      id: 'expert-sirikasemkit',
       name: lang === 'en' ? "Dr. Sirikasemkit Tiamtong" : "ดร. สิริเกษมกิจ เทียมทอง",
       title: "Clinical Wellness Specialist",
       role: lang === 'en' ? "Holistic Health Researcher" : "ผู้เชี่ยวชาญด้านสุขภาวะทางคลินิก",
@@ -77,6 +95,7 @@ const Community = () => {
       instagram: "https://www.instagram.com/boat_sirikasamkit"
     },
     {
+      id: 'expert-jiramet',
       name: lang === 'en' ? "Dr. Jiramet Berkban" : "นพ. จิรเมธ เบิกบาน",
       title: "Deputy Assistant Researcher",
       role: lang === 'en' ? "Clinical Support Specialist" : "รองผู้ช่วยนักวิจัย / แพทย์สนับสนุนคลินิก",
@@ -86,6 +105,7 @@ const Community = () => {
       instagram: "https://www.instagram.com/jb.first"
     },
     {
+      id: 'expert-pasu',
       name: lang === 'en' ? "Dr. Pasu Poeyrutai" : "ดร. พสุ เผยฤทัย",
       title: "Senior Strategic Advisor",
       role: lang === 'en' ? "Policy & Strategy Consultant" : "ที่ปรึกษาอาวุโสด้านกลยุทธ์และนโยบาย",
