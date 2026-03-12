@@ -91,7 +91,8 @@ const Community = () => {
       role: lang === 'en' ? "Policy & Strategy Consultant" : "ที่ปรึกษาอาวุโสด้านกลยุทธ์และนโยบาย",
       image: "/experts/expert6.png",
       bio_en: "A visionary strategist providing high-level guidance for research direction and digital wellbeing policies. Oversees the long-term impact of the Nomophobia assessment framework on public health.",
-      bio_th: "นักยุทธศาสตร์ผู้มีวิสัยทัศน์คอยให้คำแนะนำระดับสูงเกี่ยวกับทิศทางการวิจัยและนโยบายสุขภาวะทางดิจิทัล ดูแลผลกระทบในระยะยาวของกรอบการประเมินภาวะโนโมโฟเบียต่อสุขภาพสาธารณะ"
+      bio_th: "นักยุทธศาสตร์ผู้มีวิสัยทัศน์คอยให้คำแนะนำระดับสูงเกี่ยวกับทิศทางการวิจัยและนโยบายสุขภาวะทางดิจิทัล ดูแลผลกระทบในระยะยาวของกรอบการประเมินภาวะโนโมโฟเบียต่อสุขภาพสาธารณะ",
+      instagram: "https://www.instagram.com/ik_pasu"
     }
   ]
 
