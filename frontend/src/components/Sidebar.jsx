@@ -43,7 +43,7 @@ const Sidebar = () => {
         <SidebarLink to="/" icon={LayoutDashboard} label={lang === 'en' ? "Admin Dashboard" : "หน้าหลักแดชบอร์ด"} />
         <SidebarLink to="/assessment" icon={ClipboardCheck} label={lang === 'en' ? "Clinical Assessment" : "แบบประเมินคลินิก"} />
         <SidebarLink to="/education" icon={BookOpen} label={lang === 'en' ? "Wellness Education" : "คลังความรู้สุขภาพ"} />
-        <SidebarLink to="/community" icon={Users} label={lang === 'en' ? "Comparison Hub" : "ศูนย์เปรียบเทียบข้อมูล"} />
+        <SidebarLink to="/community" icon={Users} label={lang === 'en' ? "Meet the Experts" : "รู้จักผู้เชี่ยวชาญ"} />
       </div>
 
 

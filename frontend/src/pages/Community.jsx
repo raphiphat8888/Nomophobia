@@ -1,9 +1,9 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useLanguage } from '../context/LanguageContext'
-import { Award, Brain, Mail, Linkedin } from 'lucide-react'
+import { Award, Brain, Instagram } from 'lucide-react'
 
-const ExpertCard = ({ name, role, title, image, bio_en, bio_th, delay, lang }) => (
+const ExpertCard = ({ name, role, title, image, bio_en, bio_th, delay, lang, linkedin, mail, instagram }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     animate={{ opacity: 1, y: 0 }}
@@ -18,8 +18,7 @@ const ExpertCard = ({ name, role, title, image, bio_en, bio_th, delay, lang }) =
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 space-x-3">
-        <a href="#" className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-blue-500 transition-colors"><Linkedin size={18} /></a>
-        <a href="#" className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-blue-500 transition-colors"><Mail size={18} /></a>
+        {instagram && <a href={instagram} target="_blank" rel="noopener noreferrer" className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-pink-500 transition-colors"><Instagram size={18} /></a>}
       </div>
     </div>
 
@@ -42,28 +41,49 @@ const Community = () => {
 
   const experts = [
     {
-      name: lang === 'en' ? "Dr. Pun" : "นพ. ปั้น",
+      name: lang === 'en' ? "Dr. Thanapol Khampim" : "นพ. ธนพล คำพิมพ์",
       title: "Nomophobia Specialist",
       role: lang === 'en' ? "Psychiatrist / Digital Health Expert" : "จิตแพทย์ / ผู้เชี่ยวชาญด้านสุขภาพดิจิทัล",
       image: "/experts/expert1.png",
       bio_en: "A leading medical expert specializing in the diagnosis and treatment of Nomophobia (No Mobile Phone Phobia). Committed to researching digital addiction and developing practical interventions to help individuals establish healthier relationships with technology.",
-      bio_th: "แพทย์ผู้เชี่ยวชาญระดับแนวหน้าในการวินิจฉัยและรักษาภาวะโนโมโฟเบีย (Nomophobia) มุ่งมั่นวิจัยด้านการเสพติดสื่อดิจิทัลและพัฒนาแนวทางการรักษาที่ปฏิบัติได้จริง เพื่อช่วยให้ผู้คนสร้างความสัมพันธ์ที่ดีต่อสุขภาพกับเทคโนโลยี"
+      bio_th: "แพทย์ผู้เชี่ยวชาญระดับแนวหน้าในการวินิจฉัยและรักษาภาวะโนโมโฟเบีย (Nomophobia) มุ่งมั่นวิจัยด้านการเสพติดสื่อดิจิทัลและพัฒนาแนวทางการรักษาที่ปฏิบัติได้จริง เพื่อช่วยให้ผู้คนสร้างความสัมพันธ์ที่ดีต่อสุขภาพกับเทคโนโลยี",
+      instagram: "https://www.instagram.com/punz_tnp"
     },
     {
-      name: lang === 'en' ? "Mon" : "หม่อน",
+      name: lang === 'en' ? "Dr. Narusorn Ruangchot" : "ดร. นฤสรณ์ เรืองโชติ",
       title: "Data Analyst & Collector",
       role: lang === 'en' ? "Data Scientist / Data Analyst" : "นักเก็บรวบรวมและวิเคราะห์ข้อมูล",
       image: "/experts/expert2.png",
       bio_en: "Specializes in aggregating and analyzing behavioral and demographic data to identify Nomophobia patterns. Ensures data integrity and develops predictive models to accurately assess digital dependency risks.",
-      bio_th: "ผู้รับผิดชอบหลักในการเก็บรวบรวมและวิเคราะห์ข้อมูลพฤติกรรมการใช้สมาร์ทโฟนของกลุ่มตัวอย่าง แปลงข้อมูลทางสถิติที่ซับซ้อนให้กลายเป็นข้อมูลเชิงลึก เพื่อนำไปใช้พัฒนาโมเดลทำนายความเสี่ยงได้อย่างแม่นยำ"
+      bio_th: "ผู้รับผิดชอบหลักในการเก็บรวบรวมและวิเคราะห์ข้อมูลพฤติกรรมการใช้สมาร์ทโฟนของกลุ่มตัวอย่าง แปลงข้อมูลทางสถิติที่ซับซ้อนให้กลายเป็นข้อมูลเชิงลึก เพื่อนำไปใช้พัฒนาโมเดลทำนายความเสี่ยงได้อย่างแม่นยำ",
+      instagram: "https://www.instagram.com/baimon.exe"
     },
     {
-      name: lang === 'en' ? "Takt" : "ทัค",
+      name: lang === 'en' ? "Dr. Raphiphat Saenkla" : "ดร. รพีภัทร แสนกล้า",
       title: "Graph Analysis Expert",
       role: lang === 'en' ? "Visualization Specialist" : "ผู้เชี่ยวชาญด้านการวิเคราะห์กราฟ",
       image: "/experts/expert3.png",
       bio_en: "Specialist in analyzing and presenting data through deep-dive visualizations. Helps translate complex datasets into clear, actionable insights for better understanding of digital behavior.",
-      bio_th: "ผู้เชี่ยวชาญด้านการวิเคราะห์และนำเสนอข้อมูลผ่านกราฟเชิงลึก ช่วยในการตีความชุดข้อมูลที่ซับซ้อนให้กลายเป็นข้อสรุปที่เข้าใจง่ายและจับต้องได้ เพื่อความเข้าใจที่ชัดเจนขึ้นเกี่ยวกับพฤติกรรมดิจิทัล"
+      bio_th: "ผู้เชี่ยวชาญด้านการวิเคราะห์และนำเสนอข้อมูลผ่านกราฟเชิงลึก ช่วยในการตีความชุดข้อมูลที่ซับซ้อนให้กลายเป็นข้อสรุปที่เข้าใจง่ายและจับต้องได้ เพื่อความเข้าใจที่ชัดเจนขึ้นเกี่ยวกับพฤติกรรมดิจิทัล",
+      instagram: "https://www.instagram.com/t.takt.8888_/"
+    },
+    {
+      name: lang === 'en' ? "Dr. Sirikasemkit Tiamtong" : "ดร. สิริเกษมกิจ เทียมทอง",
+      title: "Clinical Wellness Specialist",
+      role: lang === 'en' ? "Holistic Health Researcher" : "ผู้เชี่ยวชาญด้านสุขภาวะทางคลินิก",
+      image: "/experts/expert4.png",
+      bio_en: "Expert in holistic wellness and clinical intervention. Focuses on developing balanced digital lifestyle programs to promote psychological wellbeing and reduce technology-induced stress.",
+      bio_th: "ผู้เชี่ยวชาญด้านสุขภาวะแบบองค์รวมและการบำบัดทางคลินิก มุ่งเน้นการพัฒนาโปรแกรมการใช้ชีวิตดิจิทัลอย่างสมดุล เพื่อส่งเสริมสุขภาพจิตและลดความเครียดที่เกิดจากการใช้เทคโนโลยี",
+      instagram: "https://www.instagram.com/boat_sirikasamkit"
+    },
+    {
+      name: lang === 'en' ? "Dr. Jiramet Berkban" : "นพ. จิรเมธ เบิกบาน",
+      title: "Deputy Assistant Researcher",
+      role: lang === 'en' ? "Clinical Support Specialist" : "รองผู้ช่วยนักวิจัย / แพทย์สนับสนุนคลินิก",
+      image: "/experts/expert5.png",
+      bio_en: "Provides essential clinical support and assists in coordinating research activities. Focuses on data quality assurance and patient-centric communication within the Nomophobia study.",
+      bio_th: "ผู้ให้การสนับสนุนด้านคลินิกและช่วยประสานงานกิจกรรมการวิจัย มุ่งเน้นการตรวจสอบคุณภาพข้อมูลและการสื่อสารที่ยึดผู้ป่วยเป็นศูนย์กลางในการศึกษาภาวะโนโมโฟเบีย",
+      instagram: "https://www.instagram.com/jb.first"
     }
   ]
 
