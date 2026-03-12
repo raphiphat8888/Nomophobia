@@ -1,18 +1,10 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
+import React, { useState, useEffect } from 'react'
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  LineChart, Line
+} from 'recharts'
 
-// Components
-import Sidebar from './components/Sidebar'
-import Header from './components/Header'
-
-// Pages
-import Dashboard from './pages/Dashboard'
-import Assessment from './pages/Assessment'
-import Education from './pages/Education'
-import Community from './pages/Community'
-
-import { LanguageProvider } from './context/LanguageContext'
+const API_BASE_URL = 'http://localhost:8000'
 
 function App() {
   return (

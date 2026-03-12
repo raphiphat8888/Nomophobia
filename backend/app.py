@@ -1,5 +1,6 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
@@ -71,11 +72,14 @@ app = FastAPI(title="Nomophobia Analysis System", lifespan=lifespan)
 # Enable CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"], # In production, specify your React URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+
 
 class NomophobiaInput(BaseModel):
     Age: float
