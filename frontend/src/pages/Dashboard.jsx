@@ -13,7 +13,7 @@ import {
 import { motion } from 'framer-motion'
 import { useLanguage } from '../context/LanguageContext'
 
-const API_BASE_URL = 'http://127.0.0.1:8000'
+const API_BASE_URL = 'http://localhost:8000/dashboard'
 
 const StatCard = ({ label, value, sub, icon: Icon, colorClass, bgColorClass }) => (
   <motion.div 
@@ -48,8 +48,15 @@ const Dashboard = () => {
   const [chartData, setChartData] = useState({ usage_chart: [], anxiety_chart: [] })
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/stats`).then(res => res.json()).then(setStats)
-    fetch(`${API_BASE_URL}/chart-data`).then(res => res.json()).then(setChartData)
+    fetch(`${API_BASE_URL}/stats`)
+      .then(res => res.json())
+      .then(setStats)
+      .catch(err => console.error("Stats fetch error:", err));
+
+    fetch(`${API_BASE_URL}/chart-data`)
+      .then(res => res.json())
+      .then(setChartData)
+      .catch(err => console.error("Chart data fetch error:", err));
   }, [])
 
   return (
