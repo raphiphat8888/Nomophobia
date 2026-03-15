@@ -98,15 +98,26 @@ async def predict(input_data: NomophobiaInput):
         
         # Define levels based on common interpretation of Nomophobia scores
         # Usually: 0-3 Normal, 4-7 Moderate, 8-10 Severe
-        if dynamic_score <= 4.0:
+        if dynamic_score < 5.0:
             label = "ปกติ (Normal)"
             msg = "พฤติกรรมการใช้งานของคุณอยู่ในเกณฑ์ปกติ ไม่พบความเสี่ยงของภาวะโนโมโฟเบีย"
-        elif dynamic_score <= 8.0:
+            color = "green"
+        elif dynamic_score < 8.0:
             label = "ปานกลาง (Moderate)"
             msg = "คุณเริ่มมีสัญญาณของการพึ่งพาโทรศัพท์มากเกินไป ควรเริ่มตั้งเป้าหมายในการลดเวลาหน้าจอลงบ้าง"
+            color = "yellow"
+        elif dynamic_score < 9.0:
+            label = "ใกล้รุนแรง (Near Severe)"
+            msg = "คุณมีพฤติกรรมเสพติดมือถือในระดับใกล้รุนแรง ควรปรับเปลี่ยนพฤติกรรมเพื่อลดความเสี่ยง"
+            color = "orange"
+        elif dynamic_score < 10.0:
+            label = "เริ่มรุนแรง (Onset of Severe)"
+            msg = "พฤติกรรมของคุณเริ่มเข้าสู่ขั้นรุนแรง ควรให้ความสำคัญกับการลดเวลาหน้าจออย่างจริงจัง"
+            color = "red"
         else:
             label = "รุนแรง (Severe)"
-            msg = "คุณมีความเสี่ยงสูงต่อภาวะโนโมโฟเบีย ซึ่งอาจส่งผลต่อสุขภาพจิตและการดำเนินชีวิต แนะนำให้จำกัดการใช้งานอย่างเคร่งครัดหรือปรึกษาผู้เชี่ยวชาญ"
+            msg = "กรุณาปรึกษาแพทย์ คุณมีความเสี่ยงสูงต่อภาวะโนโมโฟเบีย ซึ่งอาจส่งผลต่อสุขภาพจิตและการดำเนินชีวิต"
+            color = "dark-red"
 
         print(f"Final Dynamic Score: {dynamic_score} ({label})")
         print(f"------------------------")
@@ -115,6 +126,7 @@ async def predict(input_data: NomophobiaInput):
             "prediction_score": dynamic_score,
             "prediction_label": label,
             "message": msg,
+            "level_color": color,
             "model_type": "SVM Regressor (SVR Pipeline)"
         }
     except Exception as e:
