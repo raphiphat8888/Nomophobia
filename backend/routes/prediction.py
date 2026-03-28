@@ -67,10 +67,8 @@ async def predict(input_data: NomophobiaInput):
         data_dict = input_data.model_dump()
         input_df = pd.DataFrame([data_dict])[FEATURES]
 
-        # Check if model is a Pipeline (it usually contains its own scaler)
-        # Based on internal check, MODEL is a Pipeline with Step 1: scaler, Step 2: model
-        # So we can pass raw input_df directly to it.
-        raw_score = float(MODEL.predict(input_df)[0])
+        # Let's pass the input to the main prediction logic later
+
         
         # --- Debugging ---
         print(f"--- Prediction Debug ---")
@@ -87,8 +85,7 @@ async def predict(input_data: NomophobiaInput):
             final_input = input_df
             print(f"⚠️ Scaler not found, using raw data (Accuracy may vary)")
 
-        # Predict (using the FINAL data)
-        # Note: If MODEL is a Pipeline with its own scaler, this might double-scale.
+       # Predict (using the FINAL data)
         out_pred = MODEL.predict(final_input)[0]
         
         # Check if model is a classifier
@@ -99,7 +96,15 @@ async def predict(input_data: NomophobiaInput):
             print(f"Classifier Mode - Output Class: {out_pred}")
             print(f"Probabilities: {proba}")
         else:
-            raw_score = float(out_pred)
+            # ---------------------------------------------------------
+            # [จุดที่แก้ไข] 
+            # สมมติฐาน: โมเดลพ่นค่า 0 (ปกติ), 1 (ปานกลาง), 2 (รุนแรง)
+            # นำผลลัพธ์มาคูณ 5 เพื่อแปลงให้เป็นสเกลคะแนนเต็ม 10 สำหรับหน้า UI
+            # 0 * 5 = 0.0 (ปกติ)
+            # 1 * 5 = 5.0 (ปานกลาง)
+            # 2 * 5 = 10.0 (รุนแรง)
+            # ---------------------------------------------------------
+            raw_score = float(out_pred) * 5.0
             
         print(f"Computed Score for Frontend: {raw_score}")
         
@@ -116,7 +121,7 @@ async def predict(input_data: NomophobiaInput):
             label = "ปานกลาง (Moderate)"
             msg = "คุณเริ่มมีสัญญาณของการพึ่งพาโทรศัพท์มากเกินไป ควรเริ่มตั้งเป้าหมายในการลดเวลาหน้าจอลงบ้าง"
             color = "yellow"
-        elif dynamic_score < 9.0:
+        elif dynamic_score < 8.0:
             label = "ใกล้รุนแรง (Near Severe)"
             msg = "คุณมีพฤติกรรมเสพติดมือถือในระดับใกล้รุนแรง ควรปรับเปลี่ยนพฤติกรรมเพื่อลดความเสี่ยง"
             color = "orange"
@@ -129,6 +134,37 @@ async def predict(input_data: NomophobiaInput):
             msg = "กรุณาปรึกษาแพทย์ คุณมีความเสี่ยงสูงต่อภาวะโนโมโฟเบีย ซึ่งอาจส่งผลต่อสุขภาพจิตและการดำเนินชีวิต"
             color = "dark-red"
 
+        # --- Contextual Note: Education Purpose Check ---
+        # Phone_Usage_Purpose == 1 หมายถึง "การศึกษา"
+        education_note = None
+        if input_data.Phone_Usage_Purpose == 1 and dynamic_score >= 8.0:
+            education_ratio = (
+                input_data.Time_on_Education / input_data.Daily_Usage_Hours
+                if input_data.Daily_Usage_Hours > 0 else 0.0
+            )
+            print(f"Education Ratio: {education_ratio:.2%}")
+
+            if education_ratio >= 0.6:
+                # ใช้เพื่อการศึกษา > 60% → ลดความกังวล แต่ยังเตือนเรื่องปริมาณ
+                education_note = (
+                    "📚 หมายเหตุ: คุณใช้โทรศัพท์เพื่อการศึกษาเป็นส่วนใหญ่ "
+                    f"({education_ratio:.0%} ของเวลาใช้งานทั้งหมด) "
+                    "แม้จะเป็นการใช้ที่มีประโยชน์ แต่ปริมาณการใช้งานโดยรวมยังคงสูง "
+                    "ควรพักสายตาทุก 20-30 นาที และหลีกเลี่ยงการใช้งานก่อนนอน"
+                )
+            elif education_ratio >= 0.3:
+                # ใช้เพื่อการศึกษาบ้าง แต่ไม่ถึง 60% → เตือนให้สังเกตตัวเอง
+                education_note = (
+                    "📚 หมายเหตุ: แม้ว่าส่วนหนึ่งของการใช้งานเป็นเพื่อการศึกษา "
+                    f"({education_ratio:.0%}) แต่ยังมีการใช้งานในด้านอื่นๆ ในปริมาณสูง "
+                    "ควรตรวจสอบและปรับสมดุลการใช้งานในแต่ละวัน"
+                )
+            # ratio < 30% → ไม่เพิ่ม note เพราะ Purpose บอกว่าศึกษา แต่เวลาจริงไม่ใช่
+
+        if education_note:
+            msg = f"{msg}\n\n{education_note}"
+            print(f"Education Note Added (ratio={education_ratio:.2%})")
+
         print(f"Final Dynamic Score: {dynamic_score} ({label})")
         print(f"------------------------")
 
@@ -137,7 +173,7 @@ async def predict(input_data: NomophobiaInput):
             "prediction_label": label,
             "message": msg,
             "level_color": color,
-            "model_type": "Neural Network Regressor"
+            "model_type": "Neural Network (Auto Mode)"
         }
     except Exception as e:
         print(f"Prediction error: {e}")
