@@ -8,7 +8,7 @@ router = APIRouter(prefix="/prediction", tags=["Prediction"])
 
 # Path to the models
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(BASE_DIR, "models", "nomophobia_svm_model.joblib")
+MODEL_PATH = os.path.join(BASE_DIR, "models", "nomophobia_neural_network_model.joblib")
 # Scaler path (looking for it, or just trying to load if it exists)
 SCALER_PATH = os.path.join(BASE_DIR, "models", "nomophobia_scaler.joblib")
 
@@ -68,7 +68,7 @@ async def predict(input_data: NomophobiaInput):
         input_df = pd.DataFrame([data_dict])[FEATURES]
 
         # Check if model is a Pipeline (it usually contains its own scaler)
-        # Based on internal check, MODEL is a Pipeline with Step 1: scaler, Step 2: svr
+        # Based on internal check, MODEL is a Pipeline with Step 1: scaler, Step 2: model
         # So we can pass raw input_df directly to it.
         raw_score = float(MODEL.predict(input_df)[0])
         
@@ -127,7 +127,7 @@ async def predict(input_data: NomophobiaInput):
             "prediction_label": label,
             "message": msg,
             "level_color": color,
-            "model_type": "SVM Regressor (SVR Pipeline)"
+            "model_type": "Neural Network Regressor"
         }
     except Exception as e:
         print(f"Prediction error: {e}")
