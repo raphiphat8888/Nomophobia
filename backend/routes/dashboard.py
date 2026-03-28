@@ -6,7 +6,7 @@ router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
 # Path to the dataset
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_PATH = os.path.join(BASE_DIR, "data", "teen_phone_New.csv")
+DATA_PATH = os.path.join(BASE_DIR, "data", "teen_phone_cleaned_labeled.csv")
 
 def get_data():
     if os.path.exists(DATA_PATH):
