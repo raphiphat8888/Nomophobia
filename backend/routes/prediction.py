@@ -89,9 +89,19 @@ async def predict(input_data: NomophobiaInput):
 
         # Predict (using the FINAL data)
         # Note: If MODEL is a Pipeline with its own scaler, this might double-scale.
-        # However, to prioritize the user's explicit request for accuracy:
-        raw_score = float(MODEL.predict(final_input)[0])
-        print(f"Raw Regression Score: {raw_score}")
+        out_pred = MODEL.predict(final_input)[0]
+        
+        # Check if model is a classifier
+        if hasattr(MODEL, "predict_proba"):
+            proba = MODEL.predict_proba(final_input)[0]
+            # Map class 0=Mild (3.0), 1=Moderate (7.0), 2=Severe (10.0)
+            raw_score = float(proba[0] * 3.0 + proba[1] * 7.0 + proba[2] * 10.0)
+            print(f"Classifier Mode - Output Class: {out_pred}")
+            print(f"Probabilities: {proba}")
+        else:
+            raw_score = float(out_pred)
+            
+        print(f"Computed Score for Frontend: {raw_score}")
         
         # Clip score to 0-10 range for visual consistency
         dynamic_score = round(max(0.0, min(10.0, raw_score)), 1)
